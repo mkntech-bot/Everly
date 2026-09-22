@@ -106,6 +106,30 @@ function Memories() {
   };
 
   // =========================================================
+  // NAVIGATION
+  // =========================================================
+
+  const goToDashboard = () => {
+    navigate("/dashboard");
+  };
+
+  const goToOurTime = () => {
+    navigate("/our-time");
+  };
+
+  const goToOurStory = () => {
+    navigate("/our-story");
+  };
+
+  const goToMemories = () => {
+    navigate("/memories");
+  };
+
+  const goToSettings = () => {
+    navigate("/settings");
+  };
+
+  // =========================================================
   // LOAD MEMORIES
   // =========================================================
 
@@ -248,7 +272,9 @@ function Memories() {
         let selectedRelationship =
           null;
 
+        // =====================================================
         // ACTIVE CONNECTED
+        // =====================================================
 
         const {
           data: connected,
@@ -283,7 +309,9 @@ function Memories() {
             connected[0];
         }
 
+        // =====================================================
         // ACTIVE OWN
+        // =====================================================
 
         if (!selectedRelationship) {
           const {
@@ -323,7 +351,9 @@ function Memories() {
           }
         }
 
+        // =====================================================
         // ENDED CONNECTED
+        // =====================================================
 
         if (!selectedRelationship) {
           const {
@@ -360,7 +390,9 @@ function Memories() {
           }
         }
 
+        // =====================================================
         // ENDED OWN
+        // =====================================================
 
         if (!selectedRelationship) {
           const {
@@ -400,7 +432,9 @@ function Memories() {
           }
         }
 
+        // =====================================================
         // NO RELATIONSHIP
+        // =====================================================
 
         if (!selectedRelationship) {
           navigate(
@@ -480,6 +514,12 @@ function Memories() {
   // =========================================================
 
   const resetForm = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(
+        previewUrl
+      );
+    }
+
     setShowForm(false);
     setSelectedFile(null);
     setPreviewUrl("");
@@ -522,7 +562,6 @@ function Memories() {
       return;
     }
 
-    // Basic image validation
     if (
       !file.type.startsWith(
         "image/"
@@ -535,7 +574,6 @@ function Memories() {
       return;
     }
 
-    // 10 MB maximum
     if (
       file.size >
       10 * 1024 * 1024
@@ -545,6 +583,12 @@ function Memories() {
       );
 
       return;
+    }
+
+    if (previewUrl) {
+      URL.revokeObjectURL(
+        previewUrl
+      );
     }
 
     setSelectedFile(file);
@@ -583,6 +627,12 @@ function Memories() {
         if (!relationship?.id) {
           throw new Error(
             "We couldn't find your relationship."
+          );
+        }
+
+        if (relationship.ended_at) {
+          throw new Error(
+            "This relationship has ended, so new memories cannot be added."
           );
         }
 
@@ -768,11 +818,11 @@ function Memories() {
           ]
         );
 
+        resetForm();
+
         alert(
           "Memory added to your story. ❤️"
         );
-
-        resetForm();
       } catch (error) {
         console.error(
           "Memory save error:",
@@ -808,10 +858,6 @@ function Memories() {
           memory.id
         );
 
-        // ===================================================
-        // DELETE DATABASE ROW
-        // ===================================================
-
         const {
           error: deleteError,
         } = await supabase
@@ -831,10 +877,6 @@ function Memories() {
         if (deleteError) {
           throw deleteError;
         }
-
-        // ===================================================
-        // DELETE IMAGE
-        // ===================================================
 
         const {
           error: storageDeleteError,
@@ -918,7 +960,6 @@ function Memories() {
   if (loading) {
     return (
       <div className="dashboard-loading">
-
         <div className="dashboard-loader-heart">
           ♥
         </div>
@@ -926,7 +967,6 @@ function Memories() {
         <p>
           Loading your memories...
         </p>
-
       </div>
     );
   }
@@ -954,79 +994,76 @@ function Memories() {
 
         <nav className="dashboard-nav">
 
+          {/* HOME */}
+
           <button
             className="dashboard-nav-item"
             type="button"
-            onClick={() =>
-              navigate("/dashboard")
+            onClick={
+              goToDashboard
             }
           >
             <span>⌂</span>
             Home
           </button>
 
+          {/* OUR TIME */}
+
           <button
             className="dashboard-nav-item"
             type="button"
+            onClick={
+              goToOurTime
+            }
           >
             <span>⏱</span>
             Our Time
           </button>
 
+          {/* OUR STORY */}
+
           <button
             className="dashboard-nav-item"
             type="button"
-            onClick={() =>
-              navigate("/our-story")
+            onClick={
+              goToOurStory
             }
           >
             <span>♡</span>
             Our Story
           </button>
 
+          {/* MEMORIES */}
+
           <button
             className="dashboard-nav-item active"
             type="button"
+            onClick={
+              goToMemories
+            }
           >
             <span>▣</span>
             Memories
-          </button>
-
-          <button
-            className="dashboard-nav-item"
-            type="button"
-          >
-            <span>◷</span>
-            Important Dates
-          </button>
-
-          <button
-            className="dashboard-nav-item"
-            type="button"
-          >
-            <span>✉</span>
-            Love Notes
-          </button>
-
-          <button
-            className="dashboard-nav-item"
-            type="button"
-          >
-            <span>✦</span>
-            Milestones
           </button>
 
         </nav>
 
         <div className="dashboard-sidebar-bottom">
 
+          {/* SETTINGS */}
+
           <button
             className="dashboard-nav-item"
             type="button"
+            onClick={
+              goToSettings
+            }
           >
             <span>⚙</span>
             Settings
           </button>
+
+          {/* LOG OUT */}
 
           <button
             className="dashboard-logout"
@@ -1048,8 +1085,6 @@ function Memories() {
       ===================================================== */}
 
       <main className="dashboard-main">
-
-        {/* HEADER */}
 
         <header className="dashboard-header">
 
@@ -1211,9 +1246,16 @@ function Memories() {
                     <button
                       type="button"
                       onClick={() => {
+                        if (previewUrl) {
+                          URL.revokeObjectURL(
+                            previewUrl
+                          );
+                        }
+
                         setSelectedFile(
                           null
                         );
+
                         setPreviewUrl(
                           ""
                         );

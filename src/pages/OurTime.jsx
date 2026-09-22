@@ -6,7 +6,7 @@ import "../App.css";
 function getDuration(startValue, endValue) {
   const start = new Date(startValue);
   const end = new Date(endValue);
-
+  
   if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
     return {
       years: 0,

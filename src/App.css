@@ -5515,3 +5515,501 @@ button.dashboard-feature-card {
   background: #ffffff;
   border-color: #e85d75;
 }
+/* =========================================================
+   SETTINGS PAGE
+========================================================= */
+
+.settings-card {
+  width: 100%;
+  margin-bottom: 24px;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid rgba(232, 93, 117, 0.12);
+  border-radius: 24px;
+  box-shadow: 0 12px 35px rgba(32, 32, 36, 0.05);
+}
+
+.settings-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.settings-card-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(232, 93, 117, 0.12),
+    rgba(155, 93, 229, 0.12)
+  );
+
+  color: #e85d75;
+  font-size: 20px;
+}
+
+.settings-card-header p {
+  margin: 0 0 5px;
+  color: #e85d75;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.settings-card-header h2 {
+  margin: 0 0 6px;
+  color: #202024;
+  font-size: 21px;
+}
+
+.settings-card-header span {
+  display: block;
+  color: #77727a;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* FORM */
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-field label {
+  color: #202024;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.settings-field input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 16px;
+
+  border: 1px solid #e7dfe3;
+  border-radius: 14px;
+
+  background: #fffafb;
+  color: #202024;
+
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.settings-field input:focus {
+  border-color: #e85d75;
+  box-shadow: 0 0 0 4px rgba(232, 93, 117, 0.08);
+}
+
+.settings-field input:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  background: #f7f5f6;
+}
+
+.settings-field small {
+  color: #77727a;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.settings-save-button {
+  align-self: flex-start;
+
+  min-height: 48px;
+  padding: 0 22px;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    #e85d75,
+    #d94d67
+  );
+
+  color: #ffffff;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: 0 10px 24px rgba(232, 93, 117, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.settings-save-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(232, 93, 117, 0.25);
+}
+
+.settings-save-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+
+/* SECURITY OPTION */
+
+.settings-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  padding: 20px;
+
+  border: 1px solid #eee5e8;
+  border-radius: 18px;
+
+  background: #fffafb;
+}
+
+.settings-option strong {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #202024;
+  font-size: 15px;
+}
+
+.settings-option p {
+  margin: 0;
+
+  color: #77727a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.settings-secondary-button {
+  flex-shrink: 0;
+
+  min-height: 42px;
+  padding: 0 17px;
+
+  border: 1px solid #e85d75;
+  border-radius: 12px;
+
+  background: #ffffff;
+  color: #e85d75;
+
+  font-weight: 700;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.settings-secondary-button:hover {
+  background: #e85d75;
+  color: #ffffff;
+}
+
+/* ABOUT */
+
+.settings-about {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.settings-about > div {
+  padding: 18px;
+
+  border-radius: 16px;
+  background: #fffafb;
+  border: 1px solid #eee5e8;
+}
+
+.settings-about span {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #77727a;
+  font-size: 12px;
+}
+
+.settings-about strong {
+  color: #202024;
+  font-size: 15px;
+}
+
+/* MESSAGE */
+
+.settings-message {
+  width: 100%;
+  margin-bottom: 24px;
+  padding: 14px 17px;
+
+  border-radius: 14px;
+
+  background: rgba(232, 93, 117, 0.08);
+  border: 1px solid rgba(232, 93, 117, 0.15);
+
+  color: #202024;
+  font-size: 14px;
+}
+
+/* DANGER / LOGOUT */
+
+.settings-danger-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  width: 100%;
+  margin-bottom: 40px;
+  padding: 24px;
+
+  border-radius: 22px;
+
+  background: #fff7f8;
+  border: 1px solid rgba(232, 93, 117, 0.16);
+}
+
+.settings-danger-card p {
+  margin: 0 0 5px;
+
+  color: #e85d75;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.settings-danger-card h2 {
+  margin: 0 0 5px;
+
+  color: #202024;
+  font-size: 18px;
+}
+
+.settings-danger-card span {
+  display: block;
+
+  color: #77727a;
+  font-size: 13px;
+}
+
+.settings-danger-card button {
+  flex-shrink: 0;
+
+  min-height: 44px;
+  padding: 0 18px;
+
+  border: 1px solid #e85d75;
+  border-radius: 12px;
+
+  background: #ffffff;
+  color: #e85d75;
+
+  font-weight: 700;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.settings-danger-card button:hover {
+  background: #e85d75;
+  color: #ffffff;
+}
+
+/* =========================================================
+   SETTINGS RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .settings-card {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .settings-card-header {
+    gap: 12px;
+  }
+
+  .settings-option {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .settings-secondary-button {
+    width: 100%;
+  }
+
+  .settings-save-button {
+    width: 100%;
+  }
+
+  .settings-about {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-danger-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .settings-danger-card button {
+    width: 100%;
+  }
+}
+/* =========================================================
+   DASHBOARD NAME EDITOR
+========================================================= */
+
+.dashboard-welcome-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dashboard-name {
+  display: inline;
+}
+
+.dashboard-edit-name-button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  background: #fff0f4;
+  color: #e85d75;
+  border: 1px solid #f5d2db;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dashboard-edit-name-button:hover {
+  background: #ffe4eb;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(232, 93, 117, 0.15);
+}
+
+.dashboard-edit-name-button:active {
+  transform: scale(0.95);
+}
+
+.dashboard-name-editor {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+}
+
+.dashboard-name-input {
+  width: min(300px, 70vw);
+  min-width: 160px;
+  padding: 8px 12px;
+  border: 1px solid #e85d75;
+  border-radius: 10px;
+  outline: none;
+  background: #ffffff;
+  color: #202024;
+  font-size: inherit;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(232, 93, 117, 0.08);
+}
+
+.dashboard-name-input:focus {
+  border-color: #e85d75;
+  box-shadow:
+    0 0 0 3px rgba(232, 93, 117, 0.12);
+}
+
+.dashboard-name-save,
+.dashboard-name-cancel {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 700;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.dashboard-name-save {
+  background: #e85d75;
+  color: #ffffff;
+}
+
+.dashboard-name-save:hover {
+  background: #d94d66;
+  transform: translateY(-1px);
+}
+
+.dashboard-name-cancel {
+  background: #f5f1f3;
+  color: #77727a;
+}
+
+.dashboard-name-cancel:hover {
+  background: #ebe5e8;
+  transform: translateY(-1px);
+}
+
+.dashboard-name-save:disabled,
+.dashboard-name-cancel:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+@media (max-width: 600px) {
+  .dashboard-welcome-title {
+    gap: 6px;
+  }
+
+  .dashboard-edit-name-button {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .dashboard-name-input {
+    width: min(220px, 68vw);
+    font-size: 0.95em;
+  }
+
+  .dashboard-name-save,
+  .dashboard-name-cancel {
+    width: 28px;
+    height: 28px;
+    font-size: 15px;
+  }
+}

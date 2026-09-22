@@ -24,6 +24,14 @@ function Dashboard() {
   const [error, setError] = useState("");
 
   // =========================================================
+  // EDIT DISPLAY NAME
+  // =========================================================
+
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState("");
+  const [savingName, setSavingName] = useState(false);
+
+  // =========================================================
   // INVITATION
   // =========================================================
 
@@ -232,7 +240,7 @@ function Dashboard() {
         }
 
         // =====================================================
-        // NO RELATIONSHIP AT ALL
+        // NO RELATIONSHIP
         // =====================================================
 
         if (!selectedRelationship) {
@@ -329,10 +337,6 @@ function Dashboard() {
           return;
         }
 
-        // =====================================================
-        // AUTH SESSION ERROR
-        // =====================================================
-
         if (
           err?.name ===
             "AuthSessionMissingError" ||
@@ -383,10 +387,6 @@ function Dashboard() {
 
     const syncRelationshipState = async () => {
       try {
-        // =====================================================
-        // GET LATEST RELATIONSHIP
-        // =====================================================
-
         const {
           data: relationshipRows,
           error: relationshipError,
@@ -427,10 +427,6 @@ function Dashboard() {
           };
         });
 
-        // =====================================================
-        // RELATIONSHIP ENDED
-        // =====================================================
-
         if (
           latestRelationship.status === "ended" ||
           latestRelationship.ended_at
@@ -438,10 +434,6 @@ function Dashboard() {
           setEndRequest(null);
           return;
         }
-
-        // =====================================================
-        // FIND PENDING END REQUEST
-        // =====================================================
 
         const {
           data: pendingRequests,
@@ -574,8 +566,9 @@ function Dashboard() {
       if (monthPoint > end) {
         months--;
 
-        monthPoint =
-          new Date(anniversary);
+        monthPoint = new Date(
+          anniversary
+        );
 
         monthPoint.setMonth(
           anniversary.getMonth() + months
@@ -920,7 +913,6 @@ function Dashboard() {
           {
             p_request_id:
               endRequest.id,
-
             p_approve_request:
               approve,
           }
@@ -1050,6 +1042,67 @@ function Dashboard() {
     };
 
   // =========================================================
+  // EDIT DISPLAY NAME
+  // =========================================================
+
+  const handleEditName = () => {
+    setNameDraft(profile?.display_name || "");
+    setEditingName(true);
+  };
+
+  const handleCancelEditName = () => {
+    setNameDraft(profile?.display_name || "");
+    setEditingName(false);
+  };
+
+  const handleSaveName = async () => {
+    const trimmedName = nameDraft.trim();
+
+    if (!trimmedName) {
+      alert("Please enter your name.");
+      return;
+    }
+
+    if (!user?.id) {
+      alert("We couldn't find your account.");
+      return;
+    }
+
+    try {
+      setSavingName(true);
+
+      const {
+        data: updatedProfile,
+        error: updateError,
+      } = await supabase
+        .from("profiles")
+        .update({
+          display_name: trimmedName,
+        })
+        .eq("id", user.id)
+        .select("*")
+        .single();
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      setProfile(updatedProfile);
+      setNameDraft(updatedProfile?.display_name || trimmedName);
+      setEditingName(false);
+    } catch (err) {
+      console.error("Name update error:", err);
+
+      alert(
+        "Could not update your name:\n\n" +
+          (err?.message || "Unknown error")
+      );
+    } finally {
+      setSavingName(false);
+    }
+  };
+
+  // =========================================================
   // LOGOUT
   // =========================================================
 
@@ -1099,9 +1152,7 @@ function Dashboard() {
 
   const relationshipEnded =
     relationship?.status === "ended" ||
-    Boolean(
-      relationship?.ended_at
-    );
+    Boolean(relationship?.ended_at);
 
   const hasPendingEndRequest =
     Boolean(endRequest);
@@ -1194,8 +1245,6 @@ function Dashboard() {
 
         <nav className="dashboard-nav">
 
-          {/* HOME */}
-
           <button
             className="dashboard-nav-item active"
             type="button"
@@ -1206,8 +1255,6 @@ function Dashboard() {
             <span>⌂</span>
             Home
           </button>
-
-          {/* OUR TIME */}
 
           <button
             className="dashboard-nav-item"
@@ -1220,8 +1267,6 @@ function Dashboard() {
             Our Time
           </button>
 
-          {/* OUR STORY */}
-
           <button
             className="dashboard-nav-item"
             type="button"
@@ -1232,8 +1277,6 @@ function Dashboard() {
             <span>♡</span>
             Our Story
           </button>
-
-          {/* MEMORIES */}
 
           <button
             className="dashboard-nav-item"
@@ -1253,6 +1296,9 @@ function Dashboard() {
           <button
             className="dashboard-nav-item"
             type="button"
+            onClick={() =>
+              navigate("/settings")
+            }
           >
             <span>⚙</span>
             Settings
@@ -1279,8 +1325,6 @@ function Dashboard() {
 
       <main className="dashboard-main">
 
-        {/* HEADER */}
-
         <header className="dashboard-header">
 
           <div>
@@ -1289,8 +1333,70 @@ function Dashboard() {
               YOUR STORY
             </p>
 
-            <h1>
-              Welcome back, {myName}
+            <h1 className="dashboard-welcome-title">
+              Welcome back,{" "}
+
+              {!editingName ? (
+                <>
+                  <span className="dashboard-name">
+                    {myName}
+                  </span>
+
+                  <button
+                    type="button"
+                    className="dashboard-edit-name-button"
+                    onClick={handleEditName}
+                    aria-label="Edit your name"
+                    title="Edit your name"
+                  >
+                    ✎
+                  </button>
+                </>
+              ) : (
+                <span className="dashboard-name-editor">
+                  <input
+                    type="text"
+                    value={nameDraft}
+                    onChange={(event) =>
+                      setNameDraft(event.target.value)
+                    }
+                    className="dashboard-name-input"
+                    maxLength={50}
+                    autoFocus
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        handleSaveName();
+                      }
+
+                      if (event.key === "Escape") {
+                        handleCancelEditName();
+                      }
+                    }}
+                  />
+
+                  <button
+                    type="button"
+                    className="dashboard-name-save"
+                    onClick={handleSaveName}
+                    disabled={savingName}
+                    aria-label="Save name"
+                    title="Save name"
+                  >
+                    {savingName ? "..." : "✓"}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="dashboard-name-cancel"
+                    onClick={handleCancelEditName}
+                    disabled={savingName}
+                    aria-label="Cancel editing"
+                    title="Cancel"
+                  >
+                    ×
+                  </button>
+                </span>
+              )}
             </h1>
 
             <p className="dashboard-subtitle">
@@ -1577,7 +1683,7 @@ function Dashboard() {
         )}
 
         {/* ===================================================
-            TIMER CARD
+            TIMER
         =================================================== */}
 
         <section className="timer-card">
@@ -1593,7 +1699,6 @@ function Dashboard() {
           <div className="timer-values">
 
             <div className="timer-unit">
-
               <strong>
                 {time.years}
               </strong>
@@ -1603,7 +1708,6 @@ function Dashboard() {
                   ? "Year"
                   : "Years"}
               </span>
-
             </div>
 
             <div className="timer-separator">
@@ -1611,7 +1715,6 @@ function Dashboard() {
             </div>
 
             <div className="timer-unit">
-
               <strong>
                 {time.months}
               </strong>
@@ -1621,7 +1724,6 @@ function Dashboard() {
                   ? "Month"
                   : "Months"}
               </span>
-
             </div>
 
             <div className="timer-separator">
@@ -1629,7 +1731,6 @@ function Dashboard() {
             </div>
 
             <div className="timer-unit">
-
               <strong>
                 {time.days}
               </strong>
@@ -1639,17 +1740,13 @@ function Dashboard() {
                   ? "Day"
                   : "Days"}
               </span>
-
             </div>
 
           </div>
 
-          {/* HOURS / MINUTES / SECONDS */}
-
           <div className="timer-small-values">
 
             <div>
-
               <strong>
                 {formatNumber(
                   time.hours
@@ -1659,11 +1756,9 @@ function Dashboard() {
               <span>
                 Hours
               </span>
-
             </div>
 
             <div>
-
               <strong>
                 {formatNumber(
                   time.minutes
@@ -1673,11 +1768,9 @@ function Dashboard() {
               <span>
                 Minutes
               </span>
-
             </div>
 
             <div>
-
               <strong>
                 {formatNumber(
                   time.seconds
@@ -1687,12 +1780,9 @@ function Dashboard() {
               <span>
                 Seconds
               </span>
-
             </div>
 
           </div>
-
-          {/* START DATE */}
 
           <p className="timer-started">
             Your story began{" "}
@@ -1708,8 +1798,6 @@ function Dashboard() {
             )}
           </p>
 
-          {/* OPEN OUR TIME */}
-
           <button
             type="button"
             className="our-time-dashboard-button"
@@ -1719,8 +1807,6 @@ function Dashboard() {
           >
             Open Our Time →
           </button>
-
-          {/* REQUEST END */}
 
           {relationship.status ===
             "active" &&
@@ -1750,8 +1836,6 @@ function Dashboard() {
 
         <section className="dashboard-grid">
 
-          {/* OUR TIME */}
-
           <button
             type="button"
             className="dashboard-feature-card"
@@ -1759,13 +1843,11 @@ function Dashboard() {
               navigate("/our-time")
             }
           >
-
             <div className="feature-card-icon">
               ⏱
             </div>
 
             <div>
-
               <h3>
                 Our Time
               </h3>
@@ -1774,16 +1856,12 @@ function Dashboard() {
                 See every second of your
                 journey together.
               </p>
-
             </div>
 
             <span>
               →
             </span>
-
           </button>
-
-          {/* OUR STORY */}
 
           <button
             type="button"
@@ -1792,13 +1870,11 @@ function Dashboard() {
               navigate("/our-story")
             }
           >
-
             <div className="feature-card-icon">
               ♡
             </div>
 
             <div>
-
               <h3>
                 Our Story
               </h3>
@@ -1807,16 +1883,12 @@ function Dashboard() {
                 Build your relationship
                 timeline together.
               </p>
-
             </div>
 
             <span>
               →
             </span>
-
           </button>
-
-          {/* MEMORIES */}
 
           <button
             type="button"
@@ -1825,13 +1897,11 @@ function Dashboard() {
               navigate("/memories")
             }
           >
-
             <div className="feature-card-icon">
               ▣
             </div>
 
             <div>
-
               <h3>
                 Memories
               </h3>
@@ -1840,25 +1910,19 @@ function Dashboard() {
                 Keep the moments you
                 never want to forget.
               </p>
-
             </div>
 
             <span>
               →
             </span>
-
           </button>
 
-          {/* IMPORTANT DATES */}
-
           <div className="dashboard-feature-card">
-
             <div className="feature-card-icon">
               ◷
             </div>
 
             <div>
-
               <h3>
                 Important Dates
               </h3>
@@ -1867,25 +1931,19 @@ function Dashboard() {
                 Never forget the moments
                 that matter.
               </p>
-
             </div>
 
             <span>
               →
             </span>
-
           </div>
 
-          {/* LOVE NOTES */}
-
           <div className="dashboard-feature-card">
-
             <div className="feature-card-icon">
               ✉
             </div>
 
             <div>
-
               <h3>
                 Love Notes
               </h3>
@@ -1894,13 +1952,11 @@ function Dashboard() {
                 Leave something special
                 for your partner.
               </p>
-
             </div>
 
             <span>
               →
             </span>
-
           </div>
 
         </section>
