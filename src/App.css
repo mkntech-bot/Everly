@@ -42,7 +42,9 @@ body {
   background: var(--bg);
 
   overflow-x: hidden;
+
 }
+
 
 button,
 a {
@@ -6013,3 +6015,4 @@ button.dashboard-feature-card {
     font-size: 15px;
   }
 }
+

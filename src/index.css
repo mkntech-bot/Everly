@@ -45,6 +45,8 @@ body {
   padding: 0;
 
   background: #fff8fa;
+
+  cursor: url("./assets/everly-cursor.png") 2 2, auto;
 }
 
 body,

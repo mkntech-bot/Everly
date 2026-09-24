@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-
 import Landing from "./Landing";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
